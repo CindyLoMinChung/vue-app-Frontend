@@ -145,8 +145,12 @@ new Vue({
     addToCart(lesson) {
       if (lesson.spaces > 0) {
         this.cart.push(lesson);
-        lesson.spaces -= 1;
+        lesson.spaces--;
       }
+    },
+    showCheckoutPage() {
+      // Redirect or show checkout page logic here
+      alert("Proceeding to checkout with " + this.cart.length + " items.");
     },
     // This will add the number of space by 1 because you remove it from cart
     removeFromCart(lesson) {
