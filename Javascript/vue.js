@@ -12,7 +12,7 @@ new Vue({
         location: "Room 101",
         price: 50,
         spaces: 5,
-        image: "../Images/Maths.jpeg",
+        image: "./Images/Maths.jpeg",
       },
       {
         id: 2,
@@ -20,7 +20,7 @@ new Vue({
         location: "Room 102",
         price: 60,
         spaces: 3,
-        image: "../Images/Science.jpeg",
+        image: "./Images/Science.jpeg",
       },
       {
         id: 3,
@@ -28,7 +28,7 @@ new Vue({
         location: "Room 103",
         price: 40,
         spaces: 2,
-        image: "../Images/Art.jpeg",
+        image: "./Images/Art.jpeg",
       },
       {
         id: 4,
@@ -44,7 +44,7 @@ new Vue({
         location: "Room 105",
         price: 100,
         spaces: 8,
-        image: "../Images/English.jpeg",
+        image: "./Images/English.jpeg",
       },
       {
         id: 6,
@@ -52,7 +52,7 @@ new Vue({
         location: "Room 106",
         price: 500,
         spaces: 25,
-        image: "../Images/Music.jpeg",
+        image: "./Images/Music.jpeg",
       },
       {
         id: 7,
@@ -60,7 +60,7 @@ new Vue({
         location: "Room 107",
         price: 20,
         spaces: 3,
-        image: "../Images/Economics.jpeg",
+        image: "./Images/Economics.jpeg",
       },
       {
         id: 8,
@@ -68,7 +68,7 @@ new Vue({
         location: "Room 108",
         price: 68,
         spaces: 9,
-        image: "../Images/Accounts.jpeg",
+        image: "./Images/Accounts.jpeg",
       },
       {
         id: 9,
@@ -76,7 +76,7 @@ new Vue({
         location: "Room 109",
         price: 100,
         spaces: 21,
-        image: "../Images/PE.jpeg",
+        image: "./Images/PE.jpeg",
       },
       {
         id: 10,
@@ -84,7 +84,7 @@ new Vue({
         location: "Room 110",
         price: 100,
         spaces: 6,
-        image: "../Images/Literature.jpeg",
+        image: "./Images/Literature.jpeg",
       },
     ],
     sortAttribute: "subject", // The drop in icon will have subject as default
