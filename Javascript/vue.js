@@ -36,10 +36,9 @@ new Vue({
         location: "Room 104",
         price: 70,
         spaces: 10,
-        image: "../Images/Geography.jpeg",
+        image: "./Images/Geography.jpeg",
       },
       {
-        id: 5,
         subject: "English",
         location: "Room 105",
         price: 100,
