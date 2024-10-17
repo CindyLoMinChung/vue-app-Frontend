@@ -168,7 +168,7 @@ new Vue({
     backToMainPage() {
       this.showCheckoutForm = false;
     },
-    // This will enable us to submit the order and if there is an invalid name or phone number it will give you an error
+    // This will enable us to submit the order and if there is an invalid name or phone number it will prevent you from placing an order until a valid name or phone number is entered.
     submitOrder() {
       if (this.isCheckoutValid) {
         alert("Order placed successfully!");
