@@ -18,7 +18,7 @@ new Vue({
         subject: "Science",
         location: "Room 102",
         price: 60,
-        spaces: 3,
+        spaces: 5,
         image: "/Images/Science.jpeg",
       },
       {
@@ -26,7 +26,7 @@ new Vue({
         subject: "Art",
         location: "Room 103",
         price: 40,
-        spaces: 2,
+        spaces: 5,
         image: "/Images/Art.jpeg",
       },
       {
@@ -34,7 +34,7 @@ new Vue({
         subject: "Geography",
         location: "Room 104",
         price: 70,
-        spaces: 10,
+        spaces: 5,
         image: "/Images/Geography.jpeg",
       },
       {
@@ -42,7 +42,7 @@ new Vue({
         subject: "English",
         location: "Room 105",
         price: 100,
-        spaces: 8,
+        spaces: 5,
         image: "/Images/English.jpeg",
       },
       {
@@ -50,7 +50,7 @@ new Vue({
         subject: "Music",
         location: "Room 106",
         price: 500,
-        spaces: 25,
+        spaces: 5,
         image: "/Images/Music.jpeg",
       },
       {
@@ -58,7 +58,7 @@ new Vue({
         subject: "Economics",
         location: "Room 107",
         price: 20,
-        spaces: 3,
+        spaces: 5,
         image: "/Images/Economics.jpeg",
       },
       {
@@ -66,7 +66,7 @@ new Vue({
         subject: "Account",
         location: "Room 108",
         price: 68,
-        spaces: 9,
+        spaces: 5,
         image: "/Images/Accounts.jpeg",
       },
       {
@@ -74,7 +74,7 @@ new Vue({
         subject: "Physical Education",
         location: "Room 109",
         price: 100,
-        spaces: 21,
+        spaces: 5,
         image: "/Images/PE.jpeg",
       },
       {
@@ -82,7 +82,7 @@ new Vue({
         subject: "Literature",
         location: "Room 110",
         price: 100,
-        spaces: 6,
+        spaces: 5,
         image: "/Images/Literature.jpeg",
       },
     ],
@@ -141,12 +141,14 @@ new Vue({
     },
   },
   methods: {
+    // Methods to add to cart.
     addToCart(lesson) {
       if (lesson.spaces > 0) {
         this.cart.push(lesson);
         lesson.spaces--;
       }
     },
+    // Methods to remove from cart
     removeFromCart(lesson) {
       const index = this.cart.indexOf(lesson);
       if (index > -1) {
@@ -154,16 +156,20 @@ new Vue({
         lesson.spaces += 1;
       }
     },
+    // Methods to enable toggling from ascending to descending
     toggleSortOrder() {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
     },
+    // Method to show the checkout page
     showCheckoutPage() {
       // Go to checkout page
       this.showCheckoutForm = true;
     },
+    //Method to return to main
     backToMainPage() {
       this.showCheckoutForm = false;
     },
+    // Method to submit order.
     submitOrder() {
       if (this.isCheckoutValid) {
         alert("Order placed successfully!");
@@ -186,7 +192,7 @@ new Vue({
       };
       this.cart = [];
       this.lessons.forEach((lesson) => {
-        lesson.spaces = 5; // Reset lesson spaces or use your custom logic
+        lesson.spaces = 5;
       });
       this.showCheckoutForm = false;
     },
