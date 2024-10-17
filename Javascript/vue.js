@@ -5,7 +5,6 @@ new Vue({
     showCheckoutForm: false, // Toggle for showing the checkout form
     cart: [], // Cart stores the lessons you add
     lessons: [
-      // Displays 10 lessons
       {
         id: 1,
         subject: "Math",
@@ -39,6 +38,7 @@ new Vue({
         image: "./Images/Geography.jpeg",
       },
       {
+        id: 5,
         subject: "English",
         location: "Room 105",
         price: 100,
@@ -86,7 +86,7 @@ new Vue({
         image: "./Images/Literature.jpeg",
       },
     ],
-    sortAttribute: "subject", // The drop in icon will have subject as default
+    sortAttribute: "subject", // The default sort attribute
     sortOrder: "asc", // Default sorting order ascending
     searchQuery: "", // Search input for lessons
     order: {
@@ -102,7 +102,7 @@ new Vue({
   },
   computed: {
     sortedFilteredLessons() {
-      // Filter lessons based on search query and sort the result
+      // Filter and sort lessons
       let filteredLessons = this.lessons.filter((lesson) => {
         let searchLower = this.searchQuery.toLowerCase();
         return (
@@ -131,7 +131,7 @@ new Vue({
       });
     },
     isCheckoutValid() {
-      // Check if firstName contains only letters and phone contains only numbers
+      // Validate firstName and phone inputs
       const nameRegex = /^[a-zA-Z]+$/;
       const phoneRegex = /^[0-9]+$/;
       return (
@@ -141,18 +141,12 @@ new Vue({
     },
   },
   methods: {
-    // This will substract the number of space by 1 when you click on add to cart
     addToCart(lesson) {
       if (lesson.spaces > 0) {
         this.cart.push(lesson);
         lesson.spaces--;
       }
     },
-    showCheckoutPage() {
-      // Redirect or show checkout page logic here
-      alert("Proceeding to checkout with " + this.cart.length + " items.");
-    },
-    // This will add the number of space by 1 because you remove it from cart
     removeFromCart(lesson) {
       const index = this.cart.indexOf(lesson);
       if (index > -1) {
@@ -160,19 +154,16 @@ new Vue({
         lesson.spaces += 1;
       }
     },
-    // This will toggle from ascending to descending
     toggleSortOrder() {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
     },
-    // This will show the checkout form
     showCheckoutPage() {
-      this.showCheckoutForm = !this.showCheckoutForm;
+      // Go to checkout page
+      this.showCheckoutForm = true;
     },
-    // This will enable us to return to the main page
     backToMainPage() {
       this.showCheckoutForm = false;
     },
-    // This will enable us to submit the order and if there is an invalid name or phone number it will prevent you from placing an order until a valid name or phone number is entered.
     submitOrder() {
       if (this.isCheckoutValid) {
         alert("Order placed successfully!");
@@ -181,8 +172,8 @@ new Vue({
         alert("Please provide valid Name and Phone Number.");
       }
     },
-    // This will reset the orders
     resetOrder() {
+      // Reset the order form and the cart
       this.order = {
         firstName: "",
         phone: "",
@@ -200,7 +191,6 @@ new Vue({
       this.showCheckoutForm = false;
     },
     searchLessons() {
-      // Trigger reactivity on search query change
       this.searchQuery = this.searchQuery.trim();
     },
   },
