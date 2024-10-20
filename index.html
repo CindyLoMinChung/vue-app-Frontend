@@ -344,6 +344,15 @@
           },
           // Method to submit order.
           submitOrder() {
+            // First, check if the cart has at least one item
+            if (this.cart.length === 0) {
+              alert(
+                "Your cart is empty! Please add at least one lesson to place an order."
+              );
+              return;
+            }
+
+            // Validate firstName and phone inputs
             if (this.isCheckoutValid) {
               alert("Order placed successfully!");
               this.resetOrder();
