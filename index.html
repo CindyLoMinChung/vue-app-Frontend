@@ -52,7 +52,7 @@
           type="text"
           placeholder="Search lessons..."
           v-model="searchQuery"
-          @input="searchLessons"
+          @input="searchLessons" 
         />
 
         <!-- The following div will show a drop down menu to sort by Subject, Location, Price and space. -->
@@ -254,15 +254,16 @@
           },
         },
         computed: {
+                // Filters the lessons to match any attributes (subject, location, price, spaces) that include the search term.
           sortedFilteredLessons() {
             // Filter and sort lessons
             let filteredLessons = this.lessons.filter((lesson) => {
-              let searchLower = this.searchQuery.toLowerCase();
+              let searchLower = this.searchQuery.toLowerCase(); // Convert search query to lowercase for case-insensitive search
               return (
-                lesson.subject.toLowerCase().includes(searchLower) ||
-                lesson.location.toLowerCase().includes(searchLower) ||
-                String(lesson.price).includes(searchLower) ||
-                String(lesson.spaces).includes(searchLower)
+                lesson.subject.toLowerCase().includes(searchLower) || // Search within subject
+                lesson.location.toLowerCase().includes(searchLower) || // Search within location
+                String(lesson.price).includes(searchLower) || // Search within price
+                String(lesson.spaces).includes(searchLower) // Search within spaces
               );
             });
 
@@ -358,6 +359,7 @@
             });
             this.showCheckoutForm = false;
           },
+          // Remove any leading or trailing whitespace from the search query
           searchLessons() {
             this.searchQuery = this.searchQuery.trim();
           },
