@@ -14,7 +14,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
 
-    <!-- CSS styling for the cart icon. right corner and small-->
+    <!-- CSS styling for the cart icon -->
     <style>
       .cart-icon {
         position: fixed;
@@ -42,20 +42,19 @@
   </head>
   <body>
     <div id="lessonStore">
-      
-      <!-- This section will show the main page. I use v-bind styling because it is dynamic it can be change
-       and no need for an external CSS file. The search buttonshouls not appear on cart page -->
-       <div v-if="!showCheckoutForm">
+      <!-- Main page content -->
+      <div v-if="!showCheckoutForm">
         <h1>{{ message }}</h1>
 
+        <!-- Search bar to search lessons or any queries -->
         <input
           type="text"
           placeholder="Search lessons..."
           v-model="searchQuery"
-          @input="searchLessons" 
+          @input="searchLessons"
         />
 
-        <!-- The following div will show a drop down menu to sort by Subject, Location, Price and space. -->
+        <!-- Sort options by subjects, location, price ans spaces and a toggle button to sort by asc and desc -->
         <div>
           <label for="sortAttribute">Sort by:</label>
           <select v-model="sortAttribute" id="sortAttribute">
@@ -64,16 +63,13 @@
             <option value="price">Price</option>
             <option value="spaces">Spaces</option>
           </select>
-
-          <!-- This is a toggle bottom that will switch from Ascending to descending-->
           <button @click="toggleSortOrder">
             Sort {{ sortOrder === 'asc' ? 'Ascending' : 'Descending' }}
           </button>
         </div>
       </div>
 
-      <!-- This section will show the main page. I use v-bind styling because it is dynamic it can be change
-       and no need for an external CSS file.  -->
+      <!-- Lessons Section -->
       <section v-if="!showCheckoutForm">
         <h2>Available Lessons</h2>
         <div :style="{ display: 'flex', flexWrap: 'wrap', gap: '20px' }">
@@ -99,16 +95,15 @@
           </div>
         </div>
 
-        <!-- Shopping Cart Icon and Badge with Font Awesome -->
+        <!-- Cart Icon -->
         <div v-if="cart.length > 0" @click="showCheckoutPage" class="cart-icon">
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-badge">{{ cart.length }}</span>
         </div>
       </section>
 
-      <!-- This section will show the checkout form -->
+      <!-- Checkout Form Section -->
       <section v-if="showCheckoutForm">
-        <!-- This part will show a summary of your cart and if you want to remove the cart there will be a button-->
         <h2>Your Cart</h2>
         <div v-for="lesson in cart" :key="lesson.id" class="cart-item">
           <h3>{{ lesson.subject }}</h3>
@@ -117,35 +112,14 @@
           <button @click="removeFromCart(lesson)">Remove from Cart</button>
         </div>
 
-        <!-- This part will show a check out form to fill in your name, phone, address, etc,.. -->
         <h2>Checkout</h2>
         <p><strong>First Name:</strong> <input v-model="order.firstName" /></p>
         <p><strong>Phone Number:</strong> <input v-model="order.phone" /></p>
         <p><strong>Address:</strong> <input v-model="order.address" /></p>
-          <label>Deliver to address:</label>
-          <label
-            ><input type="radio" v-model="order.delivery" value="Home" />
-            Home</label
-          >
-          <label
-            ><input type="radio" v-model="order.delivery" value="Business" />
-            Business</label
-          >
-        </p>
         <button @click="submitOrder" :disabled="!isCheckoutValid">
           Place Order
         </button>
         <button @click="backToMainPage">Back to Lessons</button>
-      </section>
-
-      <!-- This section will display the information as you type -->
-      <section v-if="showCheckoutForm">
-        <h2>Order Information</h2>
-        <p><strong>First Name:</strong> {{ order.firstName }}</p>
-        <p><strong>Phone:</strong> {{ order.phone }}</p>
-        <p><strong>Address:</strong> {{ order.address }}</p>
-        </p>
-        <p><strong>Delivery to:</strong> {{ order.delivery }}</p>
       </section>
     </div>
 
@@ -157,88 +131,7 @@
           message: "Welcome to After School Classes Checkout",
           showCheckoutForm: false, // Toggle for showing the checkout form
           cart: [], // Cart stores the lessons you add
-          lessons: [
-            {
-              id: 1,
-              subject: "Math",
-              location: "Room 101",
-              price: 50,
-              spaces: 5,
-              image: "./Images/Maths.jpeg",
-            },
-            {
-              id: 2,
-              subject: "Science",
-              location: "Room 102",
-              price: 60,
-              spaces: 5,
-              image: "./Images/Science.jpeg",
-            },
-            {
-              id: 3,
-              subject: "Art",
-              location: "Room 103",
-              price: 40,
-              spaces: 5,
-              image: "./Images/Art.jpeg",
-            },
-            {
-              id: 4,
-              subject: "Geography",
-              location: "Room 104",
-              price: 70,
-              spaces: 5,
-              image: "./Images/Geography.jpeg",
-            },
-            {
-              id: 5,
-              subject: "English",
-              location: "Room 105",
-              price: 100,
-              spaces: 5,
-              image: "./Images/English.jpeg",
-            },
-            {
-              id: 6,
-              subject: "Music",
-              location: "Room 106",
-              price: 500,
-              spaces: 5,
-              image: "./Images/Music.jpeg",
-            },
-            {
-              id: 7,
-              subject: "Economics",
-              location: "Room 107",
-              price: 20,
-              spaces: 5,
-              image: "./Images/Economics.jpeg",
-            },
-            {
-              id: 8,
-              subject: "Account",
-              location: "Room 108",
-              price: 68,
-              spaces: 5,
-              image: "./Images/Accounts.jpeg",
-            },
-            {
-              id: 9,
-              subject: "Physical Education",
-              location: "Room 109",
-              price: 100,
-              spaces: 5,
-              image: "./Images/PE.jpeg",
-            },
-            {
-              id: 10,
-              subject: "Literature",
-              location: "Room 110",
-              price: 100,
-              spaces: 5,
-              image: "./Images/Literature.jpeg",
-            },
-          ],
+          lessons: [], // Lessons are now fetched from the backend
           sortAttribute: "subject", // The default sort attribute
           sortOrder: "asc", // Default sorting order ascending
           searchQuery: "", // Search input for lessons
@@ -246,123 +139,88 @@
             firstName: "",
             phone: "",
             address: "",
-            city: "",
-            state: "",
-            zip: "",
-            gift: false,
-            delivery: "",
           },
         },
         computed: {
-                // Filters the lessons to match any attributes (subject, location, price, spaces) that include the search term.
           sortedFilteredLessons() {
-            // Filter and sort lessons
-            let filteredLessons = this.lessons.filter((lesson) => {
-              let searchLower = this.searchQuery.toLowerCase(); // Convert search query to lowercase for case-insensitive search
-              return (
-                lesson.subject.toLowerCase().includes(searchLower) || // Search within subject
-                lesson.location.toLowerCase().includes(searchLower) || // Search within location
-                String(lesson.price).includes(searchLower) || // Search within price
-                String(lesson.spaces).includes(searchLower) // Search within spaces
-              );
-            });
-
-            // Sort the filtered lessons
-            return filteredLessons.slice().sort((a, b) => {
-              let comparison = 0;
-
-              if (this.sortAttribute === "subject") {
-                comparison = a.subject.localeCompare(b.subject);
-              } else if (this.sortAttribute === "location") {
-                comparison = a.location.localeCompare(b.location);
-              } else if (this.sortAttribute === "price") {
-                comparison = a.price - b.price;
-              } else if (this.sortAttribute === "spaces") {
-                comparison = a.spaces - b.spaces;
-              }
-
+            // Filters and sorts lessons dynamically based on user input. It uses JavaScript's built-in filter and sort function, filter look in the array and match what user is typing and the sort function compares the value similar to a bubble sort to arrange ascending or descending order.
+            let filteredLessons = this.lessons.filter((lesson) =>
+              lesson.subject
+                .toLowerCase()
+                .includes(this.searchQuery.toLowerCase())
+            );
+            return filteredLessons.sort((a, b) => {
+              let comparison =
+                a[this.sortAttribute] > b[this.sortAttribute] ? 1 : -1;
               return this.sortOrder === "asc" ? comparison : -comparison;
             });
           },
           isCheckoutValid() {
-            // Validate firstName and phone inputs
-            const nameRegex = /^[a-zA-Z]+$/;
-            const phoneRegex = /^[0-9]+$/;
-            return (
-              nameRegex.test(this.order.firstName) &&
-              phoneRegex.test(this.order.phone)
-            );
+            // Validates checkout form inputs
+            return this.order.firstName && this.order.phone;
           },
         },
         methods: {
-          // Methods to add to cart.
+          fetchLessons() {
+            // Fetch lessons from the backend
+            fetch("https://vue-app-backend.onrender.com/lessons")
+              .then((response) => response.json())
+              .then((data) => (this.lessons = data))
+              .catch((error) =>
+                console.error("Error fetching lessons from backend:", error)
+              );
+          },
+          submitOrder() {
+            // Submit the cart as an order to the backend
+            fetch("https://vue-app-backend.onrender.com/order", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: this.order.firstName,
+                phone: this.order.phone,
+                lessons: this.cart.map((lesson) => lesson.id),
+              }),
+            })
+              .then((response) => response.json())
+              .then(() => alert("Order placed successfully!"))
+              .catch((error) =>
+                console.error("Error submitting order to backend:", error)
+              );
+          },
           addToCart(lesson) {
+            // Add a lesson to the cart and reduce its available spaces
             if (lesson.spaces > 0) {
               this.cart.push(lesson);
               lesson.spaces--;
             }
           },
-          // Methods to remove from cart
           removeFromCart(lesson) {
+            // Remove a lesson from the cart and increase its available spaces
             const index = this.cart.indexOf(lesson);
             if (index > -1) {
               this.cart.splice(index, 1);
               lesson.spaces += 1;
             }
           },
-          // Methods to enable toggling from ascending to descending
           toggleSortOrder() {
+            // Toggles the sorting order between ascending and descending
             this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
           },
-          // Method to show the checkout page
-          showCheckoutPage() {
-            // Go to checkout page
-            this.showCheckoutForm = true;
-          },
-          // Method to return to main page
-          backToMainPage() {
-            this.showCheckoutForm = false;
-          },
-          // Method to submit order.
-          submitOrder() {
-            // First, check if the cart has at least one item
-            if (this.cart.length === 0) {
-              alert(
-                "Your cart is empty! Please add at least one lesson to place an order."
-              );
-              return;
-            }
-
-            // Validate firstName and phone inputs
-            if (this.isCheckoutValid) {
-              alert("Order placed successfully!");
-              this.resetOrder();
-            } else {
-              alert("Please provide valid Name and Phone Number.");
-            }
-          },
-          resetOrder() {
-            // Reset the order form and the cart
-            this.order = {
-              firstName: "",
-              phone: "",
-              address: "",
-              city: "",
-              state: "",
-              zip: "",
-              gift: false,
-              delivery: "",
-            };
-            this.cart = [];
-            this.lessons.forEach((lesson) => {
-              lesson.spaces = 5;
-            });
-            this.showCheckoutForm = false;
-          },
-          // Remove any leading or trailing whitespace from the search query
           searchLessons() {
+            // Trims the search query to avoid leading/trailing whitespace
             this.searchQuery = this.searchQuery.trim();
           },
+          showCheckoutPage() {
+            // Displays the checkout page
+            this.showCheckoutForm = true;
+          },
+          backToMainPage() {
+            // Returns to the main lessons page
+            this.showCheckoutForm = false;
+          },
+        },
+        mounted() {
+          this.fetchLessons(); // Fetch lessons from the backend when the app starts
         },
       });
     </script>
