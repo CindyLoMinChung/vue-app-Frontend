@@ -182,7 +182,11 @@
               }),
             })
               .then((response) => response.json())
-              .then(() => alert("Order placed successfully!"))
+              .then(() => {
+                alert("Order placed successfully!");
+                this.resetCart(); // Reset the cart after placing the order
+                this.backToMainPage(); // Navigate back to the main page
+              })
               .catch((error) =>
                 console.error("Error submitting order to backend:", error)
               );
@@ -217,6 +221,14 @@
           backToMainPage() {
             // Returns to the main lessons page
             this.showCheckoutForm = false;
+            this.resetCart(); // Reset cart when navigating back to the main page
+          },
+          resetCart() {
+            // Reset the cart and available spaces
+            this.cart.forEach((lesson) => {
+              lesson.spaces++;
+            });
+            this.cart = [];
           },
         },
         mounted() {
