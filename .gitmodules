@@ -1,3 +1,4 @@
 [submodule "vue-app-backend"]
-	path = vue-app-backend
-	url = https://github.com/CindyLoMinChung/vue-app-backend
+    path = vue-app-backend
+    url = https://github.com/CindyLoMinChung/vue-app-backend
+    branch = main
