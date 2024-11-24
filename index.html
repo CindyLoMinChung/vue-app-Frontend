@@ -245,8 +245,26 @@
             this.cart = [];
           },
         },
+
+        validateUsername() {
+          if (!this.order.firstName.trim()) {
+            this.usernameError = "First name cannot be empty.";
+          } else {
+            this.usernameError = "";
+          }
+        },
+        validatePhone() {
+          const phoneRegex = /^[0-9]{10,15}$/;
+          if (!phoneRegex.test(this.order.phone)) {
+            this.phoneError =
+              "Phone number must be between 10 to 15 digits and contain numbers only.";
+          } else {
+            this.phoneError = "";
+          }
+        },
+
         mounted() {
-          this.fetchLessons(); // Fetch lessons from the backend when the app starts
+          this.fetchLessons();
         },
       });
     </script>
