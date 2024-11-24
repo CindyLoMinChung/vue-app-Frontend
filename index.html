@@ -154,6 +154,8 @@
             phone: "",
             address: "",
           },
+          usernameError: "", // Error message for First Name validation
+          phoneError: "", // Error message for Phone validation
         },
         computed: {
           sortedFilteredLessons() {
@@ -171,7 +173,12 @@
           },
           isCheckoutValid() {
             // Validates checkout form inputs
-            return this.order.firstName && this.order.phone;
+            return (
+              this.order.firstName &&
+              this.order.phone &&
+              !this.usernameError &&
+              !this.phoneError
+            );
           },
         },
         methods: {
@@ -244,25 +251,25 @@
             });
             this.cart = [];
           },
+          validateUsername() {
+            // Validation for First Name
+            if (!this.order.firstName.trim()) {
+              this.usernameError = "First name cannot be empty.";
+            } else {
+              this.usernameError = "";
+            }
+          },
+          validatePhone() {
+            // Validation for Phone Number
+            const phoneRegex = /^[0-9]{10,15}$/;
+            if (!phoneRegex.test(this.order.phone)) {
+              this.phoneError =
+                "Phone number must be between 10 to 15 digits and contain numbers only.";
+            } else {
+              this.phoneError = "";
+            }
+          },
         },
-
-        validateUsername() {
-          if (!this.order.firstName.trim()) {
-            this.usernameError = "First name cannot be empty.";
-          } else {
-            this.usernameError = "";
-          }
-        },
-        validatePhone() {
-          const phoneRegex = /^[0-9]{10,15}$/;
-          if (!phoneRegex.test(this.order.phone)) {
-            this.phoneError =
-              "Phone number must be between 10 to 15 digits and contain numbers only.";
-          } else {
-            this.phoneError = "";
-          }
-        },
-
         mounted() {
           this.fetchLessons();
         },
