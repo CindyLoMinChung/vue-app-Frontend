@@ -233,7 +233,7 @@
         },
         computed: {
           sortedFilteredLessons() {
-            // Filters and sorts lessons dynamically based on user input.
+            // Filters and sorts lessons dynamically based on user input. It uses JavaScript's built-in filter and sort function, filter look in the array and match what user is typing and the sort function compares the value similar to a bubble sort to arrange ascending or descending order.
             let filteredLessons = this.lessons.filter((lesson) =>
               lesson.subject
                 .toLowerCase()
