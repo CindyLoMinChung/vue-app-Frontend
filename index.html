@@ -51,6 +51,62 @@
         outline: none;
         border-radius: 4px;
       }
+
+      /* Cart container layout */
+      .cart-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      /* Individual cart items */
+      .cart-item {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .cart-item-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 15px;
+      }
+
+      .cart-item-details {
+        flex-grow: 1;
+      }
+
+      .cart-item-details h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .cart-item-details p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #555;
+      }
+
+      .remove-btn {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .remove-btn:hover {
+        background-color: #ff0000;
+      }
     </style>
   </head>
   <body>
@@ -59,7 +115,7 @@
       <div v-if="!showCheckoutForm">
         <h1>{{ message }}</h1>
 
-        <!-- Search bar to search lessons or any queries -->
+        <!-- Search bar -->
         <input
           type="text"
           placeholder="Search lessons..."
@@ -67,7 +123,7 @@
           @input="searchLessons"
         />
 
-        <!-- Sort options by subjects, location, price ans spaces and a toggle button to sort by asc and desc -->
+        <!-- Sort options -->
         <div>
           <label for="sortAttribute">Sort by:</label>
           <select v-model="sortAttribute" id="sortAttribute">
@@ -118,7 +174,11 @@
       <!-- Checkout Form Section -->
       <section v-if="showCheckoutForm">
         <h2>Your Cart</h2>
-        <div v-for="lesson in cart" :key="lesson.id" class="cart-item">
+        <div
+          v-for="(lesson, index) in cart"
+          :key="lesson.id || index"
+          class="cart-item"
+        >
           <h3>{{ lesson.subject }}</h3>
           <p>Location: {{ lesson.location }}</p>
           <p>Price: ${{ lesson.price }}</p>
@@ -126,7 +186,6 @@
         </div>
 
         <h2>Checkout</h2>
-        <!-- Validate username-->
         <p>
           <strong>First Name:</strong>
           <input
@@ -139,7 +198,6 @@
           >
         </p>
 
-        <!-- Validation for Phone -->
         <p>
           <strong>Phone Number:</strong>
           <input
@@ -158,29 +216,27 @@
       </section>
     </div>
 
-    <!-- Vue.js Instance -->
     <script>
       new Vue({
         el: "#lessonStore",
         data: {
           message: "Welcome to After School Classes Checkout",
-          showCheckoutForm: false, // Toggle for showing the checkout form
-          cart: [], // Cart stores the lessons you add
-          lessons: [], // Lessons are now fetched from the backend
-          sortAttribute: "subject", // The default sort attribute
-          sortOrder: "asc", // Default sorting order ascending
-          searchQuery: "", // Search input for lessons
+          showCheckoutForm: false,
+          cart: [],
+          lessons: [],
+          sortAttribute: "subject",
+          sortOrder: "asc",
+          searchQuery: "",
           order: {
             firstName: "",
             phone: "",
             address: "",
           },
-          usernameError: "", // Error message for First Name validation
-          phoneError: "", // Error message for Phone validation
+          usernameError: "",
+          phoneError: "",
         },
         computed: {
           sortedFilteredLessons() {
-            // Filters and sorts lessons dynamically based on user input. It uses JavaScript's built-in filter and sort function, filter look in the array and match what user is typing and the sort function compares the value similar to a bubble sort to arrange ascending or descending order.
             let filteredLessons = this.lessons.filter((lesson) =>
               lesson.subject
                 .toLowerCase()
@@ -193,7 +249,6 @@
             });
           },
           isCheckoutValid() {
-            // Validates checkout form inputs
             return (
               this.order.firstName &&
               this.order.phone &&
@@ -204,7 +259,6 @@
         },
         methods: {
           fetchLessons() {
-            // Fetch lessons from the backend
             fetch("https://vue-app-backend.onrender.com/lessons")
               .then((response) => response.json())
               .then((data) => (this.lessons = data))
@@ -213,7 +267,6 @@
               );
           },
           submitOrder() {
-            // Submit the cart as an order to the backend
             fetch("https://vue-app-backend.onrender.com/order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -226,69 +279,54 @@
               .then((response) => response.json())
               .then(() => {
                 alert("Order placed successfully!");
-                this.resetCart(); // Reset the cart after placing the order
-                this.backToMainPage(); // Navigate back to the main page
+                this.resetCart();
+                this.backToMainPage();
               })
               .catch((error) =>
                 console.error("Error submitting order to backend:", error)
               );
           },
           addToCart(lesson) {
-            // Add a lesson to the cart and reduce its available spaces
             if (lesson.spaces > 0) {
-              this.cart.push(lesson);
+              this.cart.push({ ...lesson });
               lesson.spaces--;
             }
           },
           removeFromCart(lesson) {
-            // Remove a lesson from the cart and increase its available spaces
             const index = this.cart.indexOf(lesson);
             if (index > -1) {
               this.cart.splice(index, 1);
-              lesson.spaces += 1;
+              this.lessons.find((l) => l.id === lesson.id).spaces++;
             }
           },
           toggleSortOrder() {
-            // Toggles the sorting order between ascending and descending
             this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
           },
           searchLessons() {
-            // Trims the search query to avoid leading/trailing whitespace
             this.searchQuery = this.searchQuery.trim();
           },
           showCheckoutPage() {
-            // Displays the checkout page
             this.showCheckoutForm = true;
           },
           backToMainPage() {
-            // Returns to the main lessons page
             this.showCheckoutForm = false;
-            this.resetCart(); // Reset cart when navigating back to the main page
           },
           resetCart() {
-            // Reset the cart and available spaces
             this.cart.forEach((lesson) => {
-              lesson.spaces++;
+              this.lessons.find((l) => l.id === lesson.id).spaces++;
             });
             this.cart = [];
           },
           validateUsername() {
-            // Validation for First Name
-            if (!this.order.firstName.trim()) {
-              this.usernameError = "First name cannot be empty.";
-            } else {
-              this.usernameError = "";
-            }
+            this.usernameError = !this.order.firstName.trim()
+              ? "First name cannot be empty."
+              : "";
           },
           validatePhone() {
-            // Validation for Phone Number
             const phoneRegex = /^[0-9]{10,15}$/;
-            if (!phoneRegex.test(this.order.phone)) {
-              this.phoneError =
-                "Phone number must be between 10 to 15 digits and contain numbers only.";
-            } else {
-              this.phoneError = "";
-            }
+            this.phoneError = !phoneRegex.test(this.order.phone)
+              ? "Phone number must be between 10 to 15 digits and contain numbers only."
+              : "";
           },
         },
         mounted() {
