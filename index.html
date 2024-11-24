@@ -52,51 +52,42 @@
         border-radius: 4px;
       }
 
-      /* Cart container layout */
-      .cart-container {
+      /* Style for lessons and cart items */
+      .lessons-container {
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
-        justify-content: flex-start;
-        width: 100%;
       }
 
-      /* Individual cart items */
-      .cart-item {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ccc;
+      .lesson-item {
+        flex: 1 1 200px;
+        max-width: 250px;
+        border: 1px solid black;
         padding: 10px;
         border-radius: 8px;
         background-color: #f9f9f9;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
       }
 
-      .cart-item-image {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
+      .lesson-item img {
+        width: 100%;
+        height: auto;
         border-radius: 8px;
-        margin-right: 15px;
       }
 
-      .cart-item-details {
-        flex-grow: 1;
-      }
-
-      .cart-item-details h3 {
+      .lesson-item h2 {
         margin: 0;
         font-size: 18px;
       }
 
-      .cart-item-details p {
+      .lesson-item p {
         margin: 5px 0;
         font-size: 14px;
         color: #555;
       }
 
-      .remove-btn {
-        background-color: #ff4d4d;
+      .lesson-item button {
+        background-color: #007bff;
         color: white;
         border: none;
         padding: 5px 10px;
@@ -104,8 +95,13 @@
         cursor: pointer;
       }
 
-      .remove-btn:hover {
-        background-color: #ff0000;
+      .lesson-item button:disabled {
+        background-color: #d3d3d3;
+        cursor: not-allowed;
+      }
+
+      .lesson-item button:hover:not(:disabled) {
+        background-color: #0056b3;
       }
     </style>
   </head>
@@ -115,7 +111,7 @@
       <div v-if="!showCheckoutForm">
         <h1>{{ message }}</h1>
 
-        <!-- Search bar -->
+        <!-- Search bar to search lessons or any queries -->
         <input
           type="text"
           placeholder="Search lessons..."
@@ -123,7 +119,7 @@
           @input="searchLessons"
         />
 
-        <!-- Sort options -->
+        <!-- Sort options by subjects, location, price ans spaces and a toggle button to sort by asc and desc -->
         <div>
           <label for="sortAttribute">Sort by:</label>
           <select v-model="sortAttribute" id="sortAttribute">
@@ -141,18 +137,14 @@
       <!-- Lessons Section -->
       <section v-if="!showCheckoutForm">
         <h2>Available Lessons</h2>
-        <div :style="{ display: 'flex', flexWrap: 'wrap', gap: '20px' }">
+        <div class="lessons-container">
           <div
             v-for="lesson in sortedFilteredLessons"
             :key="lesson.id"
-            :style="{ flex: '1 1 200px', maxWidth: '250px', border: '1px solid black', padding: '10px' }"
+            class="lesson-item"
           >
             <figure>
-              <img
-                :src="lesson.image"
-                alt="lesson image"
-                :style="{ width: '100%', height: 'auto' }"
-              />
+              <img :src="lesson.image" alt="lesson image" />
               <h2>{{ lesson.subject }}</h2>
               <p>Location: {{ lesson.location }}</p>
               <p>Price: ${{ lesson.price }}</p>
@@ -174,18 +166,20 @@
       <!-- Checkout Form Section -->
       <section v-if="showCheckoutForm">
         <h2>Your Cart</h2>
-        <div
-          v-for="(lesson, index) in cart"
-          :key="lesson.id || index"
-          class="cart-item"
-        >
-          <h3>{{ lesson.subject }}</h3>
-          <p>Location: {{ lesson.location }}</p>
-          <p>Price: ${{ lesson.price }}</p>
-          <button @click="removeFromCart(lesson)">Remove from Cart</button>
+        <div class="lessons-container">
+          <div v-for="lesson in cart" :key="lesson.id" class="lesson-item">
+            <figure>
+              <img :src="lesson.image" alt="lesson image" />
+              <h2>{{ lesson.subject }}</h2>
+              <p>Location: {{ lesson.location }}</p>
+              <p>Price: ${{ lesson.price }}</p>
+            </figure>
+            <button @click="removeFromCart(lesson)">Remove from Cart</button>
+          </div>
         </div>
 
         <h2>Checkout</h2>
+        <!-- Validate username-->
         <p>
           <strong>First Name:</strong>
           <input
@@ -198,6 +192,7 @@
           >
         </p>
 
+        <!-- Validation for Phone -->
         <p>
           <strong>Phone Number:</strong>
           <input
@@ -216,27 +211,29 @@
       </section>
     </div>
 
+    <!-- Vue.js Instance -->
     <script>
       new Vue({
         el: "#lessonStore",
         data: {
           message: "Welcome to After School Classes Checkout",
-          showCheckoutForm: false,
-          cart: [],
-          lessons: [],
-          sortAttribute: "subject",
-          sortOrder: "asc",
-          searchQuery: "",
+          showCheckoutForm: false, // Toggle for showing the checkout form
+          cart: [], // Cart stores the lessons you add
+          lessons: [], // Lessons are now fetched from the backend
+          sortAttribute: "subject", // The default sort attribute
+          sortOrder: "asc", // Default sorting order ascending
+          searchQuery: "", // Search input for lessons
           order: {
             firstName: "",
             phone: "",
             address: "",
           },
-          usernameError: "",
-          phoneError: "",
+          usernameError: "", // Error message for First Name validation
+          phoneError: "", // Error message for Phone validation
         },
         computed: {
           sortedFilteredLessons() {
+            // Filters and sorts lessons dynamically based on user input.
             let filteredLessons = this.lessons.filter((lesson) =>
               lesson.subject
                 .toLowerCase()
@@ -249,6 +246,7 @@
             });
           },
           isCheckoutValid() {
+            // Validates checkout form inputs
             return (
               this.order.firstName &&
               this.order.phone &&
@@ -259,6 +257,7 @@
         },
         methods: {
           fetchLessons() {
+            // Fetch lessons from the backend
             fetch("https://vue-app-backend.onrender.com/lessons")
               .then((response) => response.json())
               .then((data) => (this.lessons = data))
@@ -267,6 +266,7 @@
               );
           },
           submitOrder() {
+            // Submit the cart as an order to the backend
             fetch("https://vue-app-backend.onrender.com/order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -279,54 +279,68 @@
               .then((response) => response.json())
               .then(() => {
                 alert("Order placed successfully!");
-                this.resetCart();
-                this.backToMainPage();
+                this.resetCart(); // Reset the cart after placing the order
+                this.backToMainPage(); // Navigate back to the main page
               })
               .catch((error) =>
                 console.error("Error submitting order to backend:", error)
               );
           },
           addToCart(lesson) {
+            // Add a lesson to the cart and reduce its available spaces
             if (lesson.spaces > 0) {
-              this.cart.push({ ...lesson });
+              this.cart.push(lesson);
               lesson.spaces--;
             }
           },
           removeFromCart(lesson) {
+            // Remove a lesson from the cart and increase its available spaces
             const index = this.cart.indexOf(lesson);
             if (index > -1) {
               this.cart.splice(index, 1);
-              this.lessons.find((l) => l.id === lesson.id).spaces++;
+              lesson.spaces += 1;
             }
           },
           toggleSortOrder() {
+            // Toggles the sorting order between ascending and descending
             this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
           },
           searchLessons() {
+            // Trims the search query to avoid leading/trailing whitespace
             this.searchQuery = this.searchQuery.trim();
           },
           showCheckoutPage() {
+            // Displays the checkout page
             this.showCheckoutForm = true;
           },
           backToMainPage() {
+            // Returns to the main lessons page
             this.showCheckoutForm = false;
           },
           resetCart() {
+            // Reset the cart and available spaces
             this.cart.forEach((lesson) => {
-              this.lessons.find((l) => l.id === lesson.id).spaces++;
+              lesson.spaces++;
             });
             this.cart = [];
           },
           validateUsername() {
-            this.usernameError = !this.order.firstName.trim()
-              ? "First name cannot be empty."
-              : "";
+            // Validation for First Name
+            if (!this.order.firstName.trim()) {
+              this.usernameError = "First name cannot be empty.";
+            } else {
+              this.usernameError = "";
+            }
           },
           validatePhone() {
+            // Validation for Phone Number
             const phoneRegex = /^[0-9]{10,15}$/;
-            this.phoneError = !phoneRegex.test(this.order.phone)
-              ? "Phone number must be between 10 to 15 digits and contain numbers only."
-              : "";
+            if (!phoneRegex.test(this.order.phone)) {
+              this.phoneError =
+                "Phone number must be between 10 to 15 digits and contain numbers only.";
+            } else {
+              this.phoneError = "";
+            }
           },
         },
         mounted() {
