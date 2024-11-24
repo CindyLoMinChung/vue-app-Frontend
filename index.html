@@ -38,6 +38,18 @@
         padding: 5px 10px;
         font-size: 14px;
       }
+
+      .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 4px;
+        display: block;
+      }
+
+      input.error {
+        border-color: red;
+        outline: none;
+      }
     </style>
   </head>
   <body>
@@ -113,10 +125,14 @@
         </div>
 
         <h2>Checkout</h2>
-        <!-- Validation for First Name -->
+        <!-- Validate username-->
         <p>
           <strong>First Name:</strong>
-          <input v-model="order.firstName" @blur="validateUsername" />
+          <input
+            v-model="order.firstName"
+            @blur="validateUsername"
+            :class="{ error: usernameError }"
+          />
           <span class="error-message" v-if="usernameError"
             >{{ usernameError }}</span
           >
@@ -125,7 +141,11 @@
         <!-- Validation for Phone -->
         <p>
           <strong>Phone Number:</strong>
-          <input v-model="order.phone" @blur="validatePhone" />
+          <input
+            v-model="order.phone"
+            @blur="validatePhone"
+            :class="{ error: phoneError }"
+          />
           <span class="error-message" v-if="phoneError">{{ phoneError }}</span>
         </p>
 
