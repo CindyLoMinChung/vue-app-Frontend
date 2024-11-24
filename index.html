@@ -268,16 +268,23 @@
           submitOrder() {
             // Submit the cart as an order to the backend
             fetch("https://vue-app-backend.onrender.com/order", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
+              method: "POST", // Specify POST method
+              headers: { "Content-Type": "application/json" }, // Set JSON content type
               body: JSON.stringify({
-                name: this.order.firstName,
-                phone: this.order.phone,
-                lessons: this.cart.map((lesson) => lesson.id),
+                name: this.order.firstName.trim(), // Trim extra spaces
+                phone: this.order.phone.trim(), // Trim extra spaces
+                address: this.order.address.trim(), // Trim extra spaces
+                lessons: this.cart.map((lesson) => lesson.id), // Map lessons to IDs
               }),
             })
-              .then((response) => response.json())
-              .then(() => {
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log("Order response:", data); // Debugging: Log backend response
                 alert("Order placed successfully!");
                 this.resetCart(); // Reset the cart after placing the order
                 this.backToMainPage(); // Navigate back to the main page
@@ -286,6 +293,7 @@
                 console.error("Error submitting order to backend:", error)
               );
           },
+
           updateLessonSpaces(lessonId, newSpaces) {
             // Update lesson spaces in the backend
             fetch(`https://vue-app-backend.onrender.com/lessons/${lessonId}`, {
