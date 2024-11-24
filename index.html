@@ -113,8 +113,22 @@
         </div>
 
         <h2>Checkout</h2>
-        <p><strong>First Name:</strong> <input v-model="order.firstName" /></p>
-        <p><strong>Phone Number:</strong> <input v-model="order.phone" /></p>
+        <!-- Validation for First Name -->
+        <p>
+          <strong>First Name:</strong>
+          <input v-model="order.firstName" @blur="validateUsername" />
+          <span class="error-message" v-if="usernameError"
+            >{{ usernameError }}</span
+          >
+        </p>
+
+        <!-- Validation for Phone -->
+        <p>
+          <strong>Phone Number:</strong>
+          <input v-model="order.phone" @blur="validatePhone" />
+          <span class="error-message" v-if="phoneError">{{ phoneError }}</span>
+        </p>
+
         <p><strong>Address:</strong> <input v-model="order.address" /></p>
         <button @click="submitOrder" :disabled="!isCheckoutValid">
           Place Order
