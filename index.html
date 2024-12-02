@@ -250,6 +250,7 @@
             return (
               this.order.firstName &&
               this.order.phone &&
+              this.cart.length > 0 && // Prevents placing order if cart is empty
               !this.usernameError &&
               !this.phoneError
             );
